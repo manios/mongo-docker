@@ -69,8 +69,8 @@ RUN set -x \
 	&& mv /etc/mongod.conf /etc/mongod.conf.orig
 
 RUN mkdir -p /data/db /data/configdb /var/log/mongodb \
-	&& chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb \
-    && echo -e "set number\nsyntax on\ncolorscheme evening" >> /etc/vim/vimrc
+    && touch /var/log/mongodb/mongo.log \
+    && chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb 
 VOLUME /data/db /data/configdb /var/log/mongodb
 
 COPY docker-entrypoint.sh /usr/local/bin/
