@@ -1,0 +1,21 @@
+language: bash
+services: docker
+
+env:
+  - VERSION=2.6
+
+install:
+  - git clone https://github.com/manios/mongo-docker.git
+
+before_script:
+  - env | sort
+  - cd "$VERSION"
+  - image="mongo:$VERSION"
+
+script:
+  - travis_retry docker build -t "$image" .
+
+after_script:
+  - docker images
+
+# vim:set et ts=2 sw=2:
