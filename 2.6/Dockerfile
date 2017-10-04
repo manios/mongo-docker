@@ -9,7 +9,7 @@ RUN echo 'deb http://deb.debian.org/debian wheezy-backports main' > /etc/apt/sou
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
 		ca-certificates \
-		jq \
+		jq vim htop netcat \
 		numactl \
 # ps is not in base debian:wheezy image
 		procps \
@@ -51,10 +51,10 @@ ARG MONGO_PACKAGE=mongodb-org
 ARG MONGO_REPO=repo.mongodb.org
 ENV MONGO_PACKAGE=${MONGO_PACKAGE} MONGO_REPO=${MONGO_REPO}
 
-ENV MONGO_MAJOR 3.0
-ENV MONGO_VERSION 3.0.15
+ENV MONGO_MAJOR 2.6
+ENV MONGO_VERSION 2.6.0
 
-RUN echo "deb http://$MONGO_REPO/apt/debian wheezy/${MONGO_PACKAGE%-unstable}/$MONGO_MAJOR main" | tee "/etc/apt/sources.list.d/${MONGO_PACKAGE%-unstable}.list"
+RUN echo "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen" | tee "/etc/apt/sources.list.d/${MONGO_PACKAGE%-unstable}.list"
 
 RUN set -x \
 	&& apt-get update \
@@ -68,9 +68,10 @@ RUN set -x \
 	&& rm -rf /var/lib/mongodb \
 	&& mv /etc/mongod.conf /etc/mongod.conf.orig
 
-RUN mkdir -p /data/db /data/configdb \
-	&& chown -R mongodb:mongodb /data/db /data/configdb
-VOLUME /data/db /data/configdb
+RUN mkdir -p /data/db /data/configdb /var/log/mongodb \
+	&& chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb \
+    && echo -e "set number\nsyntax on\ncolorscheme evening" >> /etc/vim/vimrc
+VOLUME /data/db /data/configdb /var/log/mongodb
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
