@@ -69,6 +69,7 @@ RUN set -x \
 	&& mv /etc/mongod.conf /etc/mongod.conf.orig
 
 RUN mkdir -p /data/db /data/configdb /data/log \
+    && touch /data/log/mongo.log \
     && chown -R mongodb:mongodb /data/db /data/configdb /data/log
 VOLUME /data/db /data/configdb /data/log
 
