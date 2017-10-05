@@ -2,7 +2,7 @@ Based on commit [7b2fe2c](https://github.com/docker-library/mongo/tree/https://g
 
 # Supported tags and respective `Dockerfile` links
 
-* `2.6.0`, `latest` [(2.6.0/Dockerfile)](https://github.com/manios/mongo-docker/blob/master/2.6/Dockerfile)
+* `2.6.0`, `2.6`, `latest` [(2.6.0/Dockerfile)](https://github.com/manios/mongo-docker/blob/master/2.6/Dockerfile)
 
 [![](https://images.microbadger.com/badges/image/manios/mongo.svg)](http://microbadger.com/images/manios/mongo)  [![build status badge](https://img.shields.io/travis/manios/mongo-docker/master.svg)](https://travis-ci.org/manios/mongo-docker/branches)
 
@@ -90,12 +90,27 @@ Traditionally this image does output the logs to `stdout`. In order to write log
 $ docker run \
    -d \
    --name some-mongo \
-   -v /my/own/logdir:/var/log/mongodb \
-   --logpath /var/log/mongodb/mongo.log \
+   -v /my/own/logdir:/data/log \
    manios/mongo:2.6 
+     --logpath /data/log/mongo.log \
 ```
 
 The `-v /my/own/logdir:/var/log/mongodb` part of the command mounts the `/my/own/logdir` directory from the underlying host system as `/var/log/mongodb` inside the container, where MongoDB by default will write its log files.
+
+#### Share the same datetime with host
+
+By default docker has UTC as its timezone. If you want to have the same datetime as the host inside the container and show it properly in logs you can use the following:
+```console
+$ docker run \
+   -d \
+   --name some-mongo \
+   -v /my/own/logdir:/data/log \
+   -v /etc/localtime:/etc/localtime \
+   manios/mongo:2.6 
+     --logpath /data/log/mongo.log \
+```
+
+The `-v /etc/localtime:/etc/localtime` part of the command mounts the `/etc/localtime` file from the underlying host system as `:/etc/localtime` inside the container. Thus MongoDB will display the date and time using the same timezone as the host in its log files.
 
 ## Where to Store Data
 

@@ -68,10 +68,9 @@ RUN set -x \
 	&& rm -rf /var/lib/mongodb \
 	&& mv /etc/mongod.conf /etc/mongod.conf.orig
 
-RUN mkdir -p /data/db /data/configdb /var/log/mongodb \
-    && touch /var/log/mongodb/mongo.log \
-    && chown -R mongodb:mongodb /data/db /data/configdb /var/log/mongodb 
-VOLUME /data/db /data/configdb /var/log/mongodb
+RUN mkdir -p /data/db /data/configdb /data/log \
+    && chown -R mongodb:mongodb /data/db /data/configdb /data/log
+VOLUME /data/db /data/configdb /data/log
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
