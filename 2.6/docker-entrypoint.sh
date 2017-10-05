@@ -11,7 +11,7 @@ originalArgOne="$1"
 # all mongo* commands should be dropped to the correct user
 if [[ "$originalArgOne" == mongo* ]] && [ "$(id -u)" = '0' ]; then
 	if [ "$originalArgOne" = 'mongod' ]; then
-		chown -R mongodb /data/configdb /data/db
+		chown -R mongodb /data/configdb /data/db /data/log
 	fi
 
 	# make sure we can write to stdout and stderr as "mongodb"
